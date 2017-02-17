@@ -21,8 +21,9 @@ int main()
 	if(!scanf("%c", &flag)){}
   if(!scanf("%d", &size)){};
 	int** matrixA = (int**)malloc(size * sizeof(int));
-	int** matrixB = (int**)malloc(size * sizeof(int));
 	int** matrixC = (int**)malloc(size * sizeof(int));
+	int** matrixB = (int**)malloc(size * sizeof(int));
+  
 	for (i  = 0; i < size; i++) {
     matrixA[i] = (int*)malloc(size * sizeof(int));
     matrixB[i] = (int*)malloc(size * sizeof(int));
@@ -34,8 +35,8 @@ int main()
     for (i = 0; i < size; i++) {
       for (j = 0; j <size; j++) {
         matrixA[i][j] = rand() % 101;
-        matrixB[i][j] = rand() % 101;
         matrixC[i][j] = rand() % 101;
+        matrixB[i][j] = rand() % 101;
       }
     }
 	// else take input for matrixs	
