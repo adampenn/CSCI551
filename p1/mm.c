@@ -20,9 +20,9 @@ int main()
   
 	if(!scanf("%c", &flag)){}
   if(!scanf("%d", &size)){};
-	int** matrixA = (int**)malloc(size * sizeof(int));
-	int** matrixC = (int**)malloc(size * sizeof(int));
-	int** matrixB = (int**)malloc(size * sizeof(int));
+	int** matrixA = (int**)malloc(size * sizeof(int*));
+	int** matrixC = (int**)malloc(size * sizeof(int*));
+	int** matrixB = (int**)malloc(size * sizeof(int*));
   
 	for (i  = 0; i < size; i++) {
     matrixA[i] = (int*)malloc(size * sizeof(int));
@@ -59,34 +59,6 @@ int main()
     }
   }
 
-	// Print out A
-  for (i = 0; i < size; i++) {
-    for (j = 0; j < size; j++) {
-      printf("%d ", matrixA[i][j]);
-    }
-		printf("\n");
-  }
-  printf("\n");
-
-  // Print out B
-  for (i = 0; i < size; i++) {
-    for (j = 0; j < size; j++) {
-      printf("%d ", matrixB[i][j]);
-    }
-		printf("\n");
-  }
-  printf("\n");
-
-
-	// Print out C
-	if (flag /*== 'I'*/) {
-	  for (i = 0; i < size; i++) {
-      for (j = 0; j < size; j++) {
-        printf("%d ", matrixC[i][j]);
-      }
-	  	printf("\n");
-	  }
-  }
   // Calculate Dot product
   for (i = 0; i < size; i++) {
     for (j = 0; j < size; j++) {
@@ -97,29 +69,6 @@ int main()
       matrixC[i][j] = dot;
     }
   }
-
-	// Print out A
-	/*
-  for (i = 0; i < size; i++) {
-    for (j = 0; j < size; j++) {
-      printf("%d ", matrixA[i][j]);
-    }
-		printf("\n");
-  }
-  printf("\n");
-	*/
-
-  // Print out B
-	/*
-  for (i = 0; i < size; i++) {
-    for (j = 0; j < size; j++) {
-      printf("%d ", matrixB[i][j]);
-    }
-		printf("\n");
-  }
-  printf("\n");
-	*/
-
 
 	// Print out C
 	if (flag /*== 'I'*/) {
