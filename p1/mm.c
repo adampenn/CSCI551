@@ -1,4 +1,4 @@
-/* Adam J. Penn 
+/* Adam J. Penn
  * Matrix Multiplication
  * CSCI 551
  * Febuary 13, 2017
@@ -9,20 +9,24 @@
 #include "stdio.h"
 #include "time.h"
 
+#define COCKS_PER_SEC CLOCKS_PER_SEC;
+
 int main()
 {
 
   int size, i, j, k, dot;
 	char flag;
-
+  clock_t start, end;
+  double runTime;
+ 
   //seed random value based off of time
   srand(time(0));
   
 	if(!scanf("%c", &flag)){}
   if(!scanf("%d", &size)){};
 	int** matrixA = (int**)malloc(size * sizeof(int*));
-	int** matrixC = (int**)malloc(size * sizeof(int*));
 	int** matrixB = (int**)malloc(size * sizeof(int*));
+	int** matrixC = (int**)malloc(size * sizeof(int*));
   
 	for (i  = 0; i < size; i++) {
     matrixA[i] = (int*)malloc(size * sizeof(int));
@@ -35,7 +39,6 @@ int main()
     for (i = 0; i < size; i++) {
       for (j = 0; j <size; j++) {
         matrixA[i][j] = rand() % 101;
-        matrixC[i][j] = rand() % 101;
         matrixB[i][j] = rand() % 101;
       }
     }
@@ -59,6 +62,8 @@ int main()
     }
   }
 
+  start = clock();
+  
   // Calculate Dot product
   for (i = 0; i < size; i++) {
     for (j = 0; j < size; j++) {
@@ -69,9 +74,12 @@ int main()
       matrixC[i][j] = dot;
     }
   }
-
+ 
+  end = clock();
+  runTime = ((double) (end - start)) / COCKS_PER_SEC;
+ 
 	// Print out C
-	if (flag /*== 'I'*/) {
+	if (flag == 'I') {
 	  for (i = 0; i < size; i++) {
       for (j = 0; j < size; j++) {
         printf("%d ", matrixC[i][j]);
@@ -79,6 +87,9 @@ int main()
 	  	printf("\n");
 	  }
   }
+
+  printf("Time to complete dot product: %f\n", runTime);
+
   return 0;
 }
 
