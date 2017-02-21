@@ -18,9 +18,12 @@ CSU Chico
      2) 82.422075 Seconds
      3) 82.432114 Seconds
 
-3. actual speedup:
+3. Actual speedup:
    
    82.422075 / 51.820143 = 1.591
 
-
-
+4. Approach for tuning 
+   
+   I tried to use _CLICK_for on some of the non vectorized for loops but I 
+   didn't get any imporvement. I got that idea after looking at the 
+   vectorization report and doing some googling.
