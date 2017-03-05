@@ -5,6 +5,8 @@ Febuary 13, 2017
 CSU Chico
 
 1. Predicted speedup:
+         256bit            /    32bit     =      8
+   vector register size        int size       speed up
 
 2. Actual runtimes:
    

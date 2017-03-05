@@ -31,7 +31,7 @@ int main()
 	int** matrixA = (int**)malloc(size * sizeof(int*));
 	int** matrixB = (int**)malloc(size * sizeof(int*));
 	int** matrixC = (int**)malloc(size * sizeof(int*));
-  
+
 	for (i  = 0; i < size; i++) {
     matrixA[i] = (int*)malloc(size * sizeof(int));
     matrixB[i] = (int*)malloc(size * sizeof(int));
