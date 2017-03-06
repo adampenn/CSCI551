@@ -1,0 +1,31 @@
+Adam J. Penn
+Matrix Multiplication Readme
+CSCI 551
+Febuary 13, 2017
+CSU Chico
+
+1. Predicted speedup:
+         256bit            /    32bit     =      8
+   vector register size        int size       speed up
+
+2. Actual runtimes:
+   
+   Vectorized:
+     1) 51.888505 Seconds
+     2) 51.882594 Seconds
+     3) 51.820143 Seconds
+   
+   Non Vectorized:
+     1) 82.454479 Seconds
+     2) 82.422075 Seconds
+     3) 82.432114 Seconds
+
+3. Actual speedup:
+   
+   82.422075 / 51.820143 = 1.591
+
+4. Approach for tuning 
+   
+   I tried to use _CLICK_for on some of the non vectorized for loops but I 
+   didn't get any imporvement. I got that idea after looking at the 
+   vectorization report and doing some googling.

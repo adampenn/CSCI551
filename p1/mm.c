@@ -1,4 +1,4 @@
-/* Adam J. Penn 
+/* Adam J. Penn
  * Matrix Multiplication
  * CSCI 551
  * Febuary 13, 2017
@@ -9,21 +9,29 @@
 #include "stdio.h"
 #include "time.h"
 
+#define COCKS_PER_SEC CLOCKS_PER_SEC;
+
+void calculate_dot(int** matrixA, int** matrixB, int** matrixC, int size);
+void print_result(int** matrixC, int size, char flag, double runTime);
+
 int main()
 {
-
-  int size, i, j, k, dot;
-	char flag;
-
   //seed random value based off of time
   srand(time(0));
-  
+ 
+  //declaring variables
+  int size, i, j, k, dot;
+	char flag;
+  clock_t start, end;
+  double runTime;
+ 
 	if(!scanf("%c", &flag)){}
   if(!scanf("%d", &size)){};
-	int** matrixA = (int**)malloc(size * sizeof(int));
-	int** matrixC = (int**)malloc(size * sizeof(int));
-	int** matrixB = (int**)malloc(size * sizeof(int));
-  
+  start = clock();
+	int** matrixA = (int**)malloc(size * sizeof(int*));
+	int** matrixB = (int**)malloc(size * sizeof(int*));
+	int** matrixC = (int**)malloc(size * sizeof(int*));
+
 	for (i  = 0; i < size; i++) {
     matrixA[i] = (int*)malloc(size * sizeof(int));
     matrixB[i] = (int*)malloc(size * sizeof(int));
@@ -35,7 +43,6 @@ int main()
     for (i = 0; i < size; i++) {
       for (j = 0; j <size; j++) {
         matrixA[i][j] = rand() % 101;
-        matrixC[i][j] = rand() % 101;
         matrixB[i][j] = rand() % 101;
       }
     }
@@ -59,34 +66,31 @@ int main()
     }
   }
 
-	// Print out A
-  for (i = 0; i < size; i++) {
-    for (j = 0; j < size; j++) {
-      printf("%d ", matrixA[i][j]);
-    }
-		printf("\n");
-  }
-  printf("\n");
+  calculate_dot(matrixA, matrixB, matrixC, size);
+  print_result(matrixC, size, flag, runTime);
 
-  // Print out B
-  for (i = 0; i < size; i++) {
-    for (j = 0; j < size; j++) {
-      printf("%d ", matrixB[i][j]);
-    }
-		printf("\n");
-  }
-  printf("\n");
+  end = clock();
+  runTime = ((double) (end - start)) / COCKS_PER_SEC;
+ 
+  return 0;
+}
 
-
-	// Print out C
-	if (flag /*== 'I'*/) {
-	  for (i = 0; i < size; i++) {
-      for (j = 0; j < size; j++) {
-        printf("%d ", matrixC[i][j]);
-      }
-	  	printf("\n");
-	  }
-  }
+/**
+ * Calculates the dot product
+ *
+ * Takes in three matrixs and calculates the dot product of the first two and stores
+ * the reuslt into the third one.
+ *
+ * @param  matrixA    One of the matrixs being multiplied
+ * @param  matrixB    One of the matrixs being multiplied
+ * @param  matrixC    The matrix that holds the calculated dot product
+ * @param  size       The size of the matrix, only need one size sinces its n x n
+ * @return void 			Nothing is returned
+ */
+void calculate_dot(int** matrixA, int** matrixB, int** matrixC, int size) {
+  
+  int i, j, k, dot;
+  
   // Calculate Dot product
   for (i = 0; i < size; i++) {
     for (j = 0; j < size; j++) {
@@ -97,32 +101,23 @@ int main()
       matrixC[i][j] = dot;
     }
   }
+}
 
-	// Print out A
-	/*
-  for (i = 0; i < size; i++) {
-    for (j = 0; j < size; j++) {
-      printf("%d ", matrixA[i][j]);
-    }
-		printf("\n");
-  }
-  printf("\n");
-	*/
-
-  // Print out B
-	/*
-  for (i = 0; i < size; i++) {
-    for (j = 0; j < size; j++) {
-      printf("%d ", matrixB[i][j]);
-    }
-		printf("\n");
-  }
-  printf("\n");
-	*/
-
-
+/**
+ * Prints results
+ *
+ * Takes in the calculated dot product and prints it to the screen nicely formated
+ *
+ * @param  matrixC    The matrix that holds the calculated dot product
+ * @param  size       The size of the matrix, only need one size sinces its n x n
+ * @param  runTime    The calculated runtime of the program
+ * @return void 			Nothing is returned
+ */
+void print_result(int** matrixC, int size, char flag, double runTime) {
 	// Print out C
-	if (flag /*== 'I'*/) {
+  int i, j;
+	
+  if (flag == 'I') {
 	  for (i = 0; i < size; i++) {
       for (j = 0; j < size; j++) {
         printf("%d ", matrixC[i][j]);
@@ -130,6 +125,11 @@ int main()
 	  	printf("\n");
 	  }
   }
-  return 0;
+  printf("Time to complete dot product: %f\n", runTime);
 }
+
+
+
+
+
 

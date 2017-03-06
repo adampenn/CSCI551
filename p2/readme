@@ -1,0 +1,51 @@
+Adam J. Penn
+Error in Numerical Integration
+CSCI 551
+March 1, 2017
+CSU Chico
+
+The value I got for tmin was:
+
+
+The amount of time it took the program to run was about 30 seconds to a minute for each time I
+ran it since I was narrowing down on the problem. If I had ran it starting t at 0 and then
+incremented by 10,000 like I did on my final integration then it would've taken much longer.
+
+
+I started off by just passing it a n to see how far off it was. For instance I wouldn't try 
+to calulate it based off of the absolute relative error; instead I would pass in a small number
+and then a large number to get an idea of how big of a number I should have.
+
+By just passing in random values I was able to get the general Idea which is what lead me to the idea of just going through values until I got the right number.
+
+Then to calcluate a more precise number once I had an idea of what range it sould be in I did
+a do while loop until the current calulated error was less then the absolute error. During each
+itteration of the loop I would increment by 1,000,000. Then once I got 11,000,000 for t I
+incremented by 100,000 each time and passed in 9,000,000 as the starting value.
+
+When I incremented by 100,000 I got the value 10,600,000 so I then incremented by 10,000 from 
+10,400,000 and got the value 10,450,000. Something strace about this itteration was that I got
+the following errrors:
+
+T VALUE              ERROR
+_______              _____
+10410000.000000      0.0000000000000050471
+10420000.000000      0.0000000000000051098
+10430000.000000      0.0000000000000050285
+10440000.000000      0.0000000000000050792
+10450000.000000      0.0000000000000049733
+
+As you can see the error values go up and then back down which I found very strange
+
+Then I ran it for a final time incrementing by 1,000 stating at 10,420,000 aftet this run I got
+10,423,000 for t
+
+Once again my error was kinda funny:
+
+T VALUE              ERROR
+_______              _____
+10421000.000000      0.0000000000000050752
+10422000.000000      0.0000000000000050938
+10423000.000000      0.0000000000000049867
+
+
