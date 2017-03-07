@@ -31,14 +31,14 @@ int main()
     // calulate errog for current itteration
     current_error = fabs((true_value - current_value) / true_value);
 
-    printf("T Value: %.0Lf   Integration Value: %4.13Lf   Error Value: %5.19Lf\n", t, current_value, current_error);
+    printf("T Value: %.0Lf   Integration Value: %4.13Le   Error Value: %0.19Le\n", t, current_value, current_error);
 
     // Loop ends when absolute true error is in range
   } while (current_error > absolute_error);
 
-  printf("Final T value: %.0Lf\n", t);
-  printf("Final Error Value: %.19Lf\n", current_error);
-  printf("Final Itegration Value: %4.13Lf\n", current_value);
+  printf("Final T value: %.0Le\n", t);
+  printf("Final Error Value: %.19Le\n", current_error);
+  printf("Final Itegration Value: %4.13Le\n", current_value);
 
   return 0;
 }
