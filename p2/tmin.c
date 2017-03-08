@@ -16,21 +16,29 @@ long double integrate(long double a, long double b, long double t);
 
 int main() {
   // Decalare Variables
-  long double a, b, t, increment = 1000;
+  long double a, b, t, increment, previous_t;
   long double absolute_error = .5 * pow(10, -14); // 0.5e-14
   long double current_error, current_value,
               true_value = 4003.72090015132682659291;
+  int first_run = 1;
   
   // Read in the values from the user
   printf("Enter lower, upper, number of traps to start with\n\n");
   scanf("%Lf%Lf%Lf", &a, &b, &t); // read in limits and start point
-  
-  // Account for the fact that it increments in the first itteration
-  t -= increment;
+ 
+  // Start incrementing with 10,000,000
+  increment = 10000000;
+  previous_t = t;
   
   // Continue to increment t while error is higher then absolute error
   do {
-    t += increment;
+    if (!first_run) {
+      previous_t = t;
+      t += increment;
+    } else {
+      first_run = 0;
+    }
+
     current_value = integrate(a, b, t);
 
     // calulate error for current itteration
@@ -38,6 +46,12 @@ int main() {
 
     printf("T Value: %.0Lf   Integration Value: %4.13Le   Error Value: %0.19Le\n",
            t, current_value, current_error);
+
+    if ((increment > 1) && (current_error < absolute_error)) {
+      increment /= 10;
+      t = previous_t;
+      current_error = 1;
+    }
 
   } while (current_error > absolute_error);
   
@@ -76,7 +90,7 @@ long double formula(long double slice) {
 
 long double integrate(long double a, long double b, long double t) {
   // Decalare Variables
-  long double h, slice, area = 0;
+  long double h, slice, area;
   int i = 0;
   
   // Calulate the area
