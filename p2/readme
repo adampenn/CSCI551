@@ -48,4 +48,12 @@ _______              _____
 10422000.000000      0.0000000000000050938
 10423000.000000      0.0000000000000049867
 
+After I did all of this I thought I should make it automatically make it change the
+amount that it increments by so that I can find the best value for t down to the
+ones place
 
+I added some conditions to my loop and now my t value is 10,500,411 which is different
+from before but vary similar.
+
+What I thought was funny about this was that when I reverted to my old code and ran
+it I got 10,423,000 for my t value again. Anyway just thought this was interesting.
