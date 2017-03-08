@@ -56,7 +56,7 @@ int main() {
   } while (current_error > absolute_error);
   
   // Print out the final reults
-  printf("Final T value: %8.0Le\n", t);
+  printf("Final T value: %.19Le\n", t);
   printf("Final Error Value: %.19Le\n", current_error);
   printf("Final Itegration Value: %4.13Le\n", current_value);
 
