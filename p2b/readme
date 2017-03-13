@@ -1,0 +1,85 @@
+Adam J. Penn
+Error in Numerical Integration
+CSCI 551
+March 1, 2017
+CSU Chico
+
+The value I got for tmin was 10,423,000
+
+
+The amount of time it took the program to run was about 30 seconds to a minute for each time I
+ran it since I was narrowing down on the problem. If I had ran it starting t at 0 and then
+incremented by 10,000 like I did on my final integration then it would've taken much longer.
+
+
+I started off by just passing it a n to see how far off it was. For instance I wouldn't try 
+to calulate it based off of the absolute relative error; instead I would pass in a small number
+and then a large number to get an idea of how big of a number I should have.
+
+By just passing in random values I was able to get the general Idea which is what lead me to the idea of just going through values until I got the right number.
+
+Then to calcluate a more precise number once I had an idea of what range it sould be in I did
+a do while loop until the current calulated error was less then the absolute error. During each
+itteration of the loop I would increment by 1,000,000. Then once I got 11,000,000 for t I
+incremented by 100,000 each time and passed in 9,000,000 as the starting value.
+
+When I incremented by 100,000 I got the value 10,600,000 so I then incremented by 10,000 from 
+10,400,000 and got the value 10,450,000. Something strace about this itteration was that I got
+the following errrors:
+
+T VALUE              ERROR
+_______              _____
+10410000.000000      0.0000000000000050471
+10420000.000000      0.0000000000000051098
+10430000.000000      0.0000000000000050285
+10440000.000000      0.0000000000000050792
+10450000.000000      0.0000000000000049733
+
+As you can see the error values go up and then back down which I found very strange
+
+Then I ran it for a final time incrementing by 1,000 stating at 10,420,000 aftet this run I got
+10,423,000 for t
+
+Once again my error was kinda funny:
+
+T VALUE              ERROR
+_______              _____
+10421000.000000      0.0000000000000050752
+10422000.000000      0.0000000000000050938
+10423000.000000      0.0000000000000049867
+
+After I did all of this I thought I should make it automatically make it change the
+amount that it increments by so that I can find the best value for t down to the
+ones place
+
+I added some conditions to my loop and now my t value is 10,500,411 which is different
+from before but vary similar.
+
+What I thought was funny about this was that when I reverted to my old code and ran
+it I got 10,423,000 for my t value again. Anyway just thought this was interesting.
+
+When I run the new program I get the following out put when I start t at 0:
+
+T VALUE              ERROR
+_______              _____
+0                    inf
+10000000             5.5634813572588282446e-15
+20000000             1.3010813094749801258e-15
+11000000             4.4664357740224861933e-15
+10100000             5.4090264788748627769e-15
+10200000             5.2255107903389418187e-15
+10300000             5.1298430469951933061e-15
+10400000             5.0512568485499227253e-15
+10500000             5.0138216446328037764e-15
+10600000             4.8048500174332414281e-15
+10510000             4.8978557018317731436e-15
+10501000             4.9014605733200880328e-15
+10500100             5.0011214050816629242e-15
+10500200             5.0050590339381296173e-15
+10500300             5.0748271621273679309e-15
+10500400             5.0018978389406843257e-15
+10500500             4.9350136079420983967e-15
+10500410             5.0211423067321513487e-15
+10500420             4.9794367165904131141e-15
+10500411             4.9931352282460101666e-15
+
