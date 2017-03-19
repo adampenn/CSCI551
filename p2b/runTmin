@@ -1,0 +1,3 @@
+#!/bin/bash
+
+mpirun -hostfile hostFile ./tmin < test.in

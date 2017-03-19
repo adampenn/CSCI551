@@ -9,60 +9,75 @@
 #include "stdio.h"
 #include "time.h"
 #include "math.h"
+#include "mpi.h"
 
 long double formula(long double slice);
 
-long double integrate(long double a, long double b, long double t);
+long double integrate(long double a, long double b, long double t, int my_rank, int p);
 
 int main() {
   
+  // Decalare Variables
+  int         my_rank, num_processes;
+  long double a, b, n;
+  long double absolute_error = .5 * pow(10, -14); // 0.5e-14
+  long double current_error, partial_value, total_area,
+              true_value = 4003.7209001513269868;
+  double      start, end, total;
+  
   // Start MPI
   MPI_Init(NULL, NULL);
+  MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &num_processes);
 
-  // Decalare Variables
-  long double a, b, n, increment, previous_t;
-  long double absolute_error = .5 * pow(10, -14); // 0.5e-14
-  long double current_error, current_value,
-              true_value = 4003.72090015132682659291;
-  int first_run = 1;
-  
   // Read in the values from the user
-  printf("Enter a, b, and n\n");
-  scanf("%Lf%Lf%Lf", &a, &b, &n); // read in limits and start point
+  if(my_rank == 0) {
+    printf("Enter a, b, and n\n");
+    scanf("%Lf%Lf%Lf", &a, &b, &n);
+    printf("\nRunning on %d cores.\n", num_processes);
+  }
+
+  // Send out values to other porcesses / recive
+  MPI_Bcast(&a, 1, MPI_LONG_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&b, 1, MPI_LONG_DOUBLE, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&n, 1, MPI_LONG_DOUBLE, 0, MPI_COMM_WORLD);
+   
+
+  // Create a barrior for the processes to line up at
+  MPI_Barrier(MPI_COMM_WORLD);
+  
+  // Start time timer for rank 0
+  if (my_rank == 0) {
+    start = MPI_Wtime();
+  }
+
+  // Start the integration
+  partial_value = integrate(a, b, n, my_rank, num_processes);
  
-  // Start incrementing with 10,000,000
-  increment = 10000000;
-  previous_t = t;
-  
-  // Continue to increment t while error is higher then absolute error
-  do {
-    if (!first_run) {
-      previous_t = t;
-      t += increment;
+  // Collect the results from the processes
+  MPI_Reduce(&partial_value, &total_area, 1, MPI_LONG_DOUBLE, MPI_SUM, 0,
+             MPI_COMM_WORLD); 
+
+  // End the timer for rank 0
+  if (my_rank == 0) {
+    end = MPI_Wtime();
+    total = end - start; 
+  }
+
+  // Output the results
+  if (my_rank == 0) {
+    current_error = fabs((true_value - total_area) / true_value);
+    printf("Elapsed time = %.6e seconds\n", total);
+    printf("With n = %.0Lf trapezoids, our estimate\n",n);
+    printf("of the integral from %.6Lf to %.6Lf = %.13Le\n", a, b, total_area);
+    printf("true value = %.19Le\n", true_value);
+    printf("absolute relative true error = %.19Le\n", current_error);
+    if (current_error < absolute_error) {
+      printf("  is less than criteria = %.19Le\n", absolute_error);
     } else {
-      first_run = 0;
+      printf("  is Not less than criteria = %.19Le\n", absolute_error);
     }
-
-    current_value = integrate(a, b, t);
-
-    // calulate error for current itteration
-    current_error = fabs((true_value - current_value) / true_value);
-
-    printf("T Value: %.0Lf   Integration Value: %4.13Le   Error Value: %0.19Le\n",
-           t, current_value, current_error);
-
-    if ((increment > 1) && (current_error < absolute_error)) {
-      increment /= 10;
-      t = previous_t;
-      current_error = 1;
-    }
-
-  } while (current_error > absolute_error);
-  
-  // Print out the final reults
-  printf("Final T value: %.19Le\n", t);
-  printf("Final Error Value: %.19Le\n", current_error);
-  printf("Final Itegration Value: %4.13Le\n", current_value);
+  }
   
   // End MPI
   MPI_Finalize();
@@ -95,16 +110,21 @@ long double formula(long double slice) {
  * @return long double  The calulated value from the equation
  */
 
-long double integrate(long double a, long double b, long double t) {
+long double integrate(long double a, long double b, long double n, int my_rank, int p) {
   // Decalare Variables
-  long double h, slice, area;
-  int i = 0;
+  long double h, slice, area, local_a, local_b;
+  int i = 0, local_n;
+  
+  // Calculate local variables
+  h = (b - a) / n;
+  local_n = n/p;
+  local_a = a + my_rank * local_n * h;
+  local_b = local_a + local_n * h;
   
   // Calulate the area
-  h = (b - a) / t;
-  area = (formula(a) + formula(b)) / 2.0;
-  for (i = 1; i < t; i++) {
-    slice = a + i * h;
+  area = (formula(local_a) + formula(local_b)) / 2.0;
+  for (i = 1; i < local_n; i++) {
+    slice = local_a + i * h;
     area += formula(slice); 
   }
   area = h * area;

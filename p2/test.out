@@ -1,0 +1,25 @@
+Enter lower, upper, number of traps to start with
+
+T Value: 0   Integration Value:  inf   Error Value: inf
+T Value: 10000000   Integration Value: 4.0037209001513e+03   Error Value: 5.5634813572588282446e-15
+T Value: 20000000   Integration Value: 4.0037209001513e+03   Error Value: 1.3010813094749801258e-15
+T Value: 11000000   Integration Value: 4.0037209001513e+03   Error Value: 4.4664357740224861933e-15
+T Value: 10100000   Integration Value: 4.0037209001513e+03   Error Value: 5.4090264788748627769e-15
+T Value: 10200000   Integration Value: 4.0037209001513e+03   Error Value: 5.2255107903389418187e-15
+T Value: 10300000   Integration Value: 4.0037209001513e+03   Error Value: 5.1298430469951933061e-15
+T Value: 10400000   Integration Value: 4.0037209001513e+03   Error Value: 5.0512568485499227253e-15
+T Value: 10500000   Integration Value: 4.0037209001513e+03   Error Value: 5.0138216446328037764e-15
+T Value: 10600000   Integration Value: 4.0037209001513e+03   Error Value: 4.8048500174332414281e-15
+T Value: 10510000   Integration Value: 4.0037209001513e+03   Error Value: 4.8978557018317731436e-15
+T Value: 10501000   Integration Value: 4.0037209001513e+03   Error Value: 4.9014605733200880328e-15
+T Value: 10500100   Integration Value: 4.0037209001513e+03   Error Value: 5.0011214050816629242e-15
+T Value: 10500200   Integration Value: 4.0037209001513e+03   Error Value: 5.0050590339381296173e-15
+T Value: 10500300   Integration Value: 4.0037209001513e+03   Error Value: 5.0748271621273679309e-15
+T Value: 10500400   Integration Value: 4.0037209001513e+03   Error Value: 5.0018978389406843257e-15
+T Value: 10500500   Integration Value: 4.0037209001513e+03   Error Value: 4.9350136079420983967e-15
+T Value: 10500410   Integration Value: 4.0037209001513e+03   Error Value: 5.0211423067321513487e-15
+T Value: 10500420   Integration Value: 4.0037209001513e+03   Error Value: 4.9794367165904131141e-15
+T Value: 10500411   Integration Value: 4.0037209001513e+03   Error Value: 4.9931352282460101666e-15
+Final T value: 1.0500411000000000000e+07
+Final Error Value: 4.9931352282460101666e-15
+Final Itegration Value: 4.0037209001513e+03

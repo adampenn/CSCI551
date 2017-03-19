@@ -1,4 +1,4 @@
-CC=gcc
+CC=mpicc
 CFLAGS= -Wall -W -Werror -g -lm
 
 tmin: tmin.c
