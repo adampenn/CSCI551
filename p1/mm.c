@@ -128,8 +128,3 @@ void print_result(int** matrixC, int size, char flag, double runTime) {
   printf("Time to complete dot product: %f\n", runTime);
 }
 
-
-
-
-
-

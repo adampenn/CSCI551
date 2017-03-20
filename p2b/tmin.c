@@ -66,11 +66,11 @@ int main() {
 
   // Output the results
   if (my_rank == 0) {
-    current_error = fabs((true_value - total_area) / true_value);
     printf("Elapsed time = %.6e seconds\n", total);
     printf("With n = %.0Lf trapezoids, our estimate\n",n);
     printf("of the integral from %.6Lf to %.6Lf = %.13Le\n", a, b, total_area);
     printf("true value = %.19Le\n", true_value);
+    current_error = fabs((true_value - total_area) / true_value);
     printf("absolute relative true error = %.19Le\n", current_error);
     if (current_error < absolute_error) {
       printf("  is less than criteria = %.19Le\n", absolute_error);
