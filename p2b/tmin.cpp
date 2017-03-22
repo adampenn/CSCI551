@@ -1,7 +1,7 @@
 /* Adam J. Penn
  * Error in Numerical Integration
  * CSCI 551
- * March 1, 2017
+ * March 21, 2017
  * CSU Chico
  */
 
