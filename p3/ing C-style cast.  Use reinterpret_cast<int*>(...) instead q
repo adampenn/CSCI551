@@ -1,0 +1,3 @@
+mpicc matrixmult.c -Wall -W -Werror -g -lm -std=c99 -o matrixmult
+python /user/student/apenn1/bin/helpful_files/cpplint.py --filter=-runtime/references,-legal/copyright,-readability/streams,-runtime/explicit,-build/header_guard,-build/include matrixmult.cpp
+Makefile:9: recipe for target 'style' failed

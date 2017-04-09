@@ -8,9 +8,12 @@ void print_result(int *matrix, int size);
 void get_input(char* form, char* flag, int* size);
 void input_fill(int* matrix, int size);
 void random_fill(int* matrix, int size);
-void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size);
-void calculate_ikj(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size);
-void calculate_kij(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size);
+void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int sendCount,
+                   int size);
+void calculate_ikj(int* matrixA, int* matrixB, int* matrixC, int sendCount,
+                   int size);
+void calculate_kij(int* matrixA, int* matrixB, int* matrixC, int sendCount,
+                   int size);
 
 /*
  * Calculates the dot product of two matrixs
@@ -21,7 +24,6 @@ void calculate_kij(int* matrixA, int* matrixB, int* matrixC, int sendCount, int 
  * @return void    Nothing is returned
  */
 int main() {
-
   // Declare variables for program
   int  i,
        size,
@@ -34,30 +36,29 @@ int main() {
        *displs,
        extras,
        sum;
-	char form[4],
-	     flag[2];
-  double start, 
+  char form[4],
+       flag[2];
+  double start,
          end;
 
   // Start MPI
-  MPI_Init(NULL, NULL); 
+  MPI_Init(NULL, NULL);
 
   // Get the number of proccesses running
   MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
 
-  // Get the current process's rank 
+  // Get the current process's rank
   MPI_Comm_rank(MPI_COMM_WORLD, &comm_rank);
 
   srand(time(NULL));
 
   // Do some setup if you are process 0
-  if (comm_rank == 0) {	
-  
+  if (comm_rank == 0) {
     get_input(form, flag, &size);
 
-		matrixA = (int*)calloc(size*size, sizeof(int));
-		matrixB = (int*)calloc(size*size, sizeof(int));
-		matrixC = (int*)calloc(size*size, sizeof(int));
+    matrixA = (int*)calloc(size*size, sizeof(int));
+    matrixB = (int*)calloc(size*size, sizeof(int));
+    matrixC = (int*)calloc(size*size, sizeof(int));
 
     // Fill in matrixs
     if (strcmp(flag, "I") == 0) {
@@ -68,25 +69,25 @@ int main() {
       random_fill(matrixB, size);
     }
 
-		printf("running on %d processors\n", comm_sz);
-	}
+    printf("running on %d processors\n", comm_sz);
+  }
 
-	// Line up to start timing
-	MPI_Barrier(MPI_COMM_WORLD);
+  // Line up to start timing
+  MPI_Barrier(MPI_COMM_WORLD);
 
   // Set start time
-	if (comm_rank == 0) start = MPI_Wtime();
+  if (comm_rank == 0) start = MPI_Wtime();
 
   // Send size and form to the other processes
   MPI_Bcast(&form, 4, MPI_CHAR, 0, MPI_COMM_WORLD);
-	MPI_Bcast(&size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&size, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-	if (comm_rank != 0) {
+  if (comm_rank != 0) {
     matrixB = (int*)calloc(size*size, sizeof(int));
     matrixC = (int*)calloc(size*size, sizeof(int));
-	}
+  }
 
-	
+
   // Variables to hold number of elements for each process
   sendCount = (int*)calloc(comm_sz, sizeof(int));
   displs = (int*)calloc(comm_sz, sizeof(int));
@@ -94,8 +95,8 @@ int main() {
   sum = 0;
 
   // displstribute elements
-	for (i = 0; i < comm_sz; i++) {
-		sendCount[i] = (size / comm_sz) * size;
+  for (i = 0; i < comm_sz; i++) {
+    sendCount[i] = (size / comm_sz) * size;
     if (extras > 0) {
       sendCount[i]++;
       extras--;
@@ -103,43 +104,50 @@ int main() {
     displs[i] = sum;
     sum += sendCount[i];
   }
-	
+
   int *localMatrixA = (int*)calloc(sendCount[comm_rank], sizeof(int));
-	int *localMatrixC = (int*)calloc(sendCount[comm_rank], sizeof(int));
-	
-	// Send matrixA and B to the other procceses
+  int *localMatrixC = (int*)calloc(sendCount[comm_rank], sizeof(int));
+
+  // Send matrixA and B to the other procceses
   MPI_Bcast(matrixB, size * size, MPI_INT, 0, MPI_COMM_WORLD);
-	MPI_Scatterv(matrixA, sendCount, displs, MPI_INT, localMatrixA, sendCount[comm_rank], MPI_INT, 0, MPI_COMM_WORLD);
-	
+  MPI_Scatterv(matrixA, sendCount, displs, MPI_INT, localMatrixA,
+               sendCount[comm_rank], MPI_INT, 0, MPI_COMM_WORLD);
+
   // Calculate dot product
-	if (strcmp(form, "ijk") == 0) {
-    calculate_ijk(localMatrixA, matrixB, localMatrixC, sendCount[comm_rank], size);
+  if (strcmp(form, "ijk") == 0) {
+    calculate_ijk(localMatrixA, matrixB, localMatrixC, sendCount[comm_rank],
+                  size);
   } else if (strcmp(form, "ikj") == 0) {
-    calculate_ikj(localMatrixA, matrixB, localMatrixC, sendCount[comm_rank], size);
-  }	else if (strcmp(form, "kij") == 0) {
-    calculate_kij(localMatrixA, matrixB, localMatrixC, sendCount[comm_rank], size);
-	}
-	MPI_Gatherv(localMatrixC, sendCount[comm_rank], MPI_INT, matrixC, sendCount, displs, MPI_INT, 0, MPI_COMM_WORLD);
+    calculate_ikj(localMatrixA, matrixB, localMatrixC, sendCount[comm_rank],
+                  size);
+  } else if (strcmp(form, "kij") == 0) {
+    calculate_kij(localMatrixA, matrixB, localMatrixC, sendCount[comm_rank],
+                  size);
+  }
+  MPI_Gatherv(localMatrixC, sendCount[comm_rank], MPI_INT, matrixC, sendCount,
+              displs, MPI_INT, 0, MPI_COMM_WORLD);
 
-	if (comm_rank == 0) {
-		end = MPI_Wtime();
-		printf("elapsed time = %.6e seconds\n", end - start);
-		if (strcmp(flag, "I") == 0)
-			print_result(matrixC, size);
-	}
+  if (comm_rank == 0) {
+    end = MPI_Wtime();
+    printf("elapsed time = %.6e seconds\n", end - start);
+    if (strcmp(flag, "I") == 0) {
+      print_result(matrixC, size);
+    }
+  }
 
-	// Delete the memory when we are done with it
- 	free(matrixB);
- 	free(matrixC);
- 	free(sendCount);
- 	free(displs);
- 	free(localMatrixA);
- 	free(localMatrixC);
+  // Delete the memory when we are done with it
+  free(matrixA);
+  free(matrixB);
+  free(matrixC);
+  free(localMatrixA);
+  free(localMatrixC);
+  free(sendCount);
+  free(displs);
 
- 	// Close MPI
-	MPI_Finalize();
-  
- 	return 0;
+  // Close MPI
+  MPI_Finalize();
+
+  return 0;
 }
 
 /*
@@ -152,15 +160,14 @@ int main() {
  * @param  size    The size of the matrix, only need one size sinces its n x n
  * @return void    Nothing is returned
  */
-void print_result(int *matrix, int size)
-{
+void print_result(int *matrix, int size) {
   int i, j;
-	for (i = 0; i < size; i++) {
-		for (j = 0; j < size; j++) {
-			printf("%d ", matrix[i * size + j]);
+  for (i = 0; i < size; i++) {
+    for (j = 0; j < size; j++) {
+      printf("%d ", matrix[i * size + j]);
     }
-		printf("\n");
-	}
+    printf("\n");
+  }
 }
 
 /*
@@ -192,7 +199,7 @@ void get_input(char* form, char* flag, int* size) {
 void input_fill(int* matrix, int size) {
   int i;
   for (i = 0; i < size * size; i++) {
-    scanf("%d", &matrix[i]);    
+    scanf("%d", &matrix[i]);
   }
 }
 
@@ -226,7 +233,8 @@ void random_fill(int* matrix, int size) {
  * @param  size       The size of the matrix, only need one size sinces its n x n
  * @return void       Nothing is returned
  */
-void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size) {
+void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int sendCount,
+                   int size) {
   int i, j, k;
   for (i = 0; i < (sendCount/size); i++) {
     for (j = 0; j < size; j++) {
@@ -251,7 +259,8 @@ void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int sendCount, int 
  * @param  size       The size of the matrix, only need one size sinces its n x n
  * @return void       Nothing is returned
  */
-void calculate_ikj(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size) {
+void calculate_ikj(int* matrixA, int* matrixB, int* matrixC, int sendCount,
+                   int size) {
   int i, j, k, tmp;
   for (i = 0; i < sendCount; i++) {
     matrixC[i] = 0;
@@ -279,16 +288,17 @@ void calculate_ikj(int* matrixA, int* matrixB, int* matrixC, int sendCount, int 
  * @param  size       The size of the matrix, only need one size sinces its n x n
  * @return void       Nothing is returned
  */
-void calculate_kij(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size) {
+void calculate_kij(int* matrixA, int* matrixB, int* matrixC, int sendCount,
+                   int size) {
   int i, j, k, tmp;
   for (i = 0; i < sendCount; i++) {
-      matrixC[i] = 0;    
+      matrixC[i] = 0;
   }
   for (k = 0; k < size; k++) {
     for (i = 0; i < (sendCount/size); i++) {
       tmp = matrixA[i*size+k];
       for (j = 0; j < size; j++) {
-        matrixC[i * size + j] = matrixC[i * size + j] + tmp * matrixB[k * size + j];
+        matrixC[i*size+j] = matrixC[i*size+j] + tmp * matrixB[k*size+j];
       }
     }
   }
