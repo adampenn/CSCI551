@@ -1,170 +1,234 @@
-#include "stdlib.h"
-#include "mpi.h"
-#include "time.h"
-#include "string.h"
-#include "stdio.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <mpi.h>
+#include <time.h>
+#include <string.h>
 
-void print_matrix(int* matrix, int size, int time);
+void print_result(int *matrix, int size);
+void get_input(char* form, char* flag, int* size);
+void input_fill(int* matrix, int size);
+void random_fill(int* matrix, int size);
+void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size);
+void calculate_ikj(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size);
+void calculate_kij(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size);
 
-void get_input(char* form, char* flag, int* size, int comm_rank);
-
-void random_fill(int* matrixA, int* matrixB, int size);
-
-void input_fill(int* matrixA, int* matrixB, int size);
-
-void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int size, int sendSize);
-
+/*
+ * Calculates the dot product of two matrixs
+ *
+ * Lets the user choose between three forms for calculating the dot product and
+ * weather they want to enter the values or have them randomly generated.
+ *
+ * @return void    Nothing is returned
+ */
 int main() {
 
-  // Variables to be used with MPI
-  int comm_sz, comm_rank;
+  // Declare variables for program
+  int  i,
+       size,
+       comm_rank,
+       comm_sz,
+       *matrixA,
+       *matrixB,
+       *matrixC,
+       *sendCount,
+       *displs,
+       extras,
+       sum;
+	char form[4],
+	     flag[2];
+  double start, 
+         end;
 
   // Start MPI
-  MPI_Init(NULL, NULL);
+  MPI_Init(NULL, NULL); 
 
-  // Get the number of processes running
+  // Get the number of proccesses running
   MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
 
-  // Get the current process's rank
+  // Get the current process's rank 
   MPI_Comm_rank(MPI_COMM_WORLD, &comm_rank);
 
-  // Declare varibales for program
-  char *form = (char*)calloc(4, sizeof(char)),
-       *flag = (char*)calloc(2, sizeof(char));
-  int  size,
-       start,
-       end,
-       *matrixA = malloc(size*size*sizeof(int)),
-       *matrixB = malloc(size*size*sizeof(int)),
-       *matrixC = malloc(size*size*sizeof(int));
+  srand(time(NULL));
 
-  // Get inital input from the user
-  get_input(form, flag, &size, comm_rank);
+  // Do some setup if you are process 0
+  if (comm_rank == 0) {	
+  
+    get_input(form, flag, &size);
 
+		matrixA = (int*)calloc(size*size, sizeof(int));
+		matrixB = (int*)calloc(size*size, sizeof(int));
+		matrixC = (int*)calloc(size*size, sizeof(int));
 
-  // Fill in the matrixs
-  if (comm_rank == 0) {
-    
-    printf("Form: %s, Flag: %s, Size: %d\n", form, flag, size);
-    
-    if (strcmp(flag, "R") == 0) {
-      random_fill(matrixA, matrixB, size);
-    } else if (strcmp(flag, "I") == 0) {
-      input_fill(matrixA, matrixB, size);
+    // Fill in matrixs
+    if (strcmp(flag, "I") == 0) {
+      input_fill(matrixA, size);
+      input_fill(matrixB, size);
+    } else {
+      random_fill(matrixA, size);
+      random_fill(matrixB, size);
     }
 
-    printf("running on %d processors\n", comm_sz);
-  }
-  int *sendcounts = malloc(comm_sz * sizeof(*sendcounts));
+		printf("running on %d processors\n", comm_sz);
+	}
 
-  // Create barrier and start timer
-  MPI_Barrier(MPI_COMM_WORLD);
-  if (comm_rank == 0) start = MPI_Wtime();
+	// Line up to start timing
+	MPI_Barrier(MPI_COMM_WORLD);
 
-  // Calculate how much of matrixA to send
-  int *displs = malloc(comm_sz * sizeof(*displs));
+  // Set start time
+	if (comm_rank == 0) start = MPI_Wtime();
 
-  // calculate send counts and displacements
-  int extra = size%comm_sz, sum = 0;
-  for (int i = 0; i < size; i++) {
-    sendcounts[i] = size*size/comm_sz;
-    if (extra > 0) {
-      sendcounts[i]++;
-      extra--;
+  // Send size and form to the other processes
+  MPI_Bcast(&form, 4, MPI_CHAR, 0, MPI_COMM_WORLD);
+	MPI_Bcast(&size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+	if (comm_rank != 0) {
+    matrixB = (int*)calloc(size*size, sizeof(int));
+    matrixC = (int*)calloc(size*size, sizeof(int));
+	}
+
+	
+  // Variables to hold number of elements for each process
+  sendCount = (int*)calloc(comm_sz, sizeof(int));
+  displs = (int*)calloc(comm_sz, sizeof(int));
+  extras = size%comm_sz;
+  sum = 0;
+
+  // displstribute elements
+	for (i = 0; i < comm_sz; i++) {
+		sendCount[i] = (size / comm_sz) * size;
+    if (extras > 0) {
+      sendCount[i]++;
+      extras--;
     }
-
     displs[i] = sum;
-    sum += sendcounts[i];
-  } 
-
-  // Send matrixA and matrixB to all processors
-  MPI_Bcast(matrixB, size*size, MPI_INT, 0, MPI_COMM_WORLD);
-  //MPI_Scatterv(matrixA, sendcounts, displs, MPI_INT, localMatrixA, sendcounts[comm_rank], MPI_INT, 0, MPI_COMM_WORLD);
-  if (comm_rank == 0) {
-    MPI_Scatter(matrixA, size*size/comm_sz, MPI_INT, MPI_IN_PLACE, size*size/comm_sz, MPI_INT, 0, MPI_COMM_WORLD);
-  } else {
-    MPI_Scatter(matrixA, size*size/comm_sz, MPI_INT, &matrixA[displs[comm_rank]], size*size/comm_sz, MPI_INT, 0, MPI_COMM_WORLD);
-
+    sum += sendCount[i];
   }
-
-
+	
+  int *localMatrixA = (int*)calloc(sendCount[comm_rank], sizeof(int));
+	int *localMatrixC = (int*)calloc(sendCount[comm_rank], sizeof(int));
+	
+	// Send matrixA and B to the other procceses
+  MPI_Bcast(matrixB, size * size, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Scatterv(matrixA, sendCount, displs, MPI_INT, localMatrixA, sendCount[comm_rank], MPI_INT, 0, MPI_COMM_WORLD);
+	
   // Calculate dot product
-  calculate_ijk(matrixA, matrixB, matrixC, size,
-                sendcounts[comm_rank]/comm_sz);
+	if (strcmp(form, "ijk") == 0) {
+    calculate_ijk(localMatrixA, matrixB, localMatrixC, sendCount[comm_rank], size);
+  } else if (strcmp(form, "ikj") == 0) {
+    calculate_ikj(localMatrixA, matrixB, localMatrixC, sendCount[comm_rank], size);
+  }	else if (strcmp(form, "kij") == 0) {
+    calculate_kij(localMatrixA, matrixB, localMatrixC, sendCount[comm_rank], size);
+	}
+	MPI_Gatherv(localMatrixC, sendCount[comm_rank], MPI_INT, matrixC, sendCount, displs, MPI_INT, 0, MPI_COMM_WORLD);
 
-  // Gather the results back to process 0
-  //MPI_Gatherv(localMatrixC, sendcounts[comm_sz], MPI_INT, matrixC, sendcounts, displs, MPI_INT, 0, MPI_COMM_WORLD);
-  if (comm_rank == 0) {
-    MPI_Gather(MPI_IN_PLACE, size*size/comm_sz, MPI_INT, matrixC, size*size/comm_sz, MPI_INT, 0, MPI_COMM_WORLD);
-  } else {
-    MPI_Gather(&matrixC[displs[comm_rank]], size*size/comm_sz, MPI_INT, matrixC, size*size/comm_sz, MPI_INT, 0, MPI_COMM_WORLD);
+	if (comm_rank == 0) {
+		end = MPI_Wtime();
+		printf("elapsed time = %.6e seconds\n", end - start);
+		if (strcmp(flag, "I") == 0)
+			print_result(matrixC, size);
+	}
 
-  }
-  // Print the result
-  if (comm_rank == 0) {
-    end = MPI_Wtime();
-    print_matrix(matrixC, size, end-start);
-  }
+	// Delete the memory when we are done with it
+ 	free(matrixB);
+ 	free(matrixC);
+ 	free(sendCount);
+ 	free(displs);
+ 	free(localMatrixA);
+ 	free(localMatrixC);
 
-  MPI_Finalize();
-
+ 	// Close MPI
+	MPI_Finalize();
+  
+ 	return 0;
 }
 
-void print_matrix(int* matrix, int size, int time) {
+/*
+ * Prints a matrix
+ *
+ * Given a matrix it will print it with spaces between the indexs and new lines
+ * between the rows
+ *
+ * @param  matrix  The matrix to print out
+ * @param  size    The size of the matrix, only need one size sinces its n x n
+ * @return void    Nothing is returned
+ */
+void print_result(int *matrix, int size)
+{
   int i, j;
-  for (i = 0; i < size; i++) {
-    for (j = 0; j < size; j++) {
-      printf("%d ", matrix[i+j]);
+	for (i = 0; i < size; i++) {
+		for (j = 0; j < size; j++) {
+			printf("%d ", matrix[i * size + j]);
     }
-    printf("\n");
-  }
-
-  if(time != -1) printf("runtime %d\n", time); 
-
+		printf("\n");
+	}
 }
 
-void get_input(char* form, char* flag, int* size, int comm_rank) {
-  // Only setup if comm_rank is 0
-  if (comm_rank == 0) {
-    scanf("%s", form);
-    scanf("%s", flag);
-    scanf("%d", size);
-  }
-
-  // Broadcast variables
-  MPI_Bcast(form, 4, MPI_CHAR, 0, MPI_COMM_WORLD);
-  MPI_Bcast(flag, 2, MPI_CHAR, 0, MPI_COMM_WORLD);
-  MPI_Bcast(size, 1, MPI_INT, 0, MPI_COMM_WORLD);
+/*
+ * Takes input from the user
+ *
+ * Gets input from the user about how they want to program ran.
+ *
+ * @param  form  Which form to calculate the dot product with
+ * @param  flag  Wether the matrixs have random input or if the input is 
+ *               given
+ * @param  size  The size of the matrix, only need one size sinces its n x n
+ * @return void  Nothing is returned
+ */
+void get_input(char* form, char* flag, int* size) {
+  scanf("%s", form);
+  scanf("%s", flag);
+  scanf("%d", size);
 }
 
-void random_fill(int* matrixA, int* matrixB, int size) {
-  // Declare variables and seed random generator
-  srand(time(0));
+/*
+ * Fills in a matrix
+ *
+ * Takes the given matrix and fills it with input from the user.
+ *
+ * @param  matrix  The matrix to fill
+ * @param  size    The size of the matrix, only need one size sinces its n x n
+ * @return void    Nothing is returned
+ */
+void input_fill(int* matrix, int size) {
   int i;
-  // Fill matrix
-  for (i = 0; i < size*size; i++) {
-    matrixA[i] = rand() % 101;
-    matrixB[i] = rand() % 101;
+  for (i = 0; i < size * size; i++) {
+    scanf("%d", &matrix[i]);    
   }
 }
 
-void input_fill(int* matrixA, int* matrixB, int size) {
-  // Declare variables and seed random generator
+/*
+ * Fills in a matrix
+ *
+ * Takes the given matrix and fills it with random values. Assumes that random
+ * was already seeded
+ *
+ * @param  matrix  The matrix to fill
+ * @param  size    The size of the matrix, only need one size sinces its n x n
+ * @return void    Nothing is returned
+ */
+void random_fill(int* matrix, int size) {
   int i;
- 
-  // Fill matrix
-  for (i = 0; i < size*size; i++) {
-    scanf("%d", &matrixA[i]);
-    scanf("%d", &matrixB[i]);
+  for (i = 0; i < size * size; i++) {
+    matrix[i] = rand() % 101;
   }
 }
 
-void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int size, int sendSize) {
-  // Declare variables
+/*
+ * Calculates the dot product in IJK form
+ *
+ * Takes in three matrixs and calculates the dot product of the first two and stores
+ * the reuslt into the third one.
+ *
+ * @param  matrixA    One of the matrixs being multiplied
+ * @param  matrixB    One of the matrixs being multiplied
+ * @param  matrixC    The matrix that holds the calculated dot product
+ * @param  sendCount  The number of items (rows) that this function in calulating on
+ * @param  size       The size of the matrix, only need one size sinces its n x n
+ * @return void       Nothing is returned
+ */
+void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size) {
   int i, j, k;
-
-  // Calculate dot product using ijk form
-  for (i = 0; i < sendSize; i++) {
+  for (i = 0; i < (sendCount/size); i++) {
     for (j = 0; j < size; j++) {
       matrixC[i*size+j] = 0;
       for (k = 0; k < size; k++) {
@@ -174,12 +238,58 @@ void calculate_ijk(int* matrixA, int* matrixB, int* matrixC, int size, int sendS
   }
 }
 
+/*
+ * Calculates the dot product in IKJ form
+ *
+ * Takes in three matrixs and calculates the dot product of the first two and stores
+ * the reuslt into the third one.
+ *
+ * @param  matrixA    One of the matrixs being multiplied
+ * @param  matrixB    One of the matrixs being multiplied
+ * @param  matrixC    The matrix that holds the calculated dot product
+ * @param  sendCount  The number of items (rows) that this function in calulating on
+ * @param  size       The size of the matrix, only need one size sinces its n x n
+ * @return void       Nothing is returned
+ */
+void calculate_ikj(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size) {
+  int i, j, k, tmp;
+  for (i = 0; i < sendCount; i++) {
+    matrixC[i] = 0;
+  }
+  for (i = 0; i < (sendCount/size); i++) {
+    for (k = 0; k < size; k++) {
+      tmp = matrixA[i*size+k];
+      for (j = 0; j < size; j++) {
+        matrixC[i*size+j] = matrixC[i*size+j] + tmp * matrixB[k*size+j];
+      }
+    }
+  }
+}
 
-
-
-
-
-
-
-
-
+/**
+ * Calculates the dot product in KIJ form
+ *
+ * Takes in three matrixs and calculates the dot product of the first two and stores
+ * the reuslt into the third one.
+ *
+ * @param  matrixA    One of the matrixs being multiplied
+ * @param  matrixB    One of the matrixs being multiplied
+ * @param  matrixC    The matrix that holds the calculated dot product
+ * @param  sendCount  The number of items (rows) that this function in calulating on
+ * @param  size       The size of the matrix, only need one size sinces its n x n
+ * @return void       Nothing is returned
+ */
+void calculate_kij(int* matrixA, int* matrixB, int* matrixC, int sendCount, int size) {
+  int i, j, k, tmp;
+  for (i = 0; i < sendCount; i++) {
+      matrixC[i] = 0;    
+  }
+  for (k = 0; k < size; k++) {
+    for (i = 0; i < (sendCount/size); i++) {
+      tmp = matrixA[i*size+k];
+      for (j = 0; j < size; j++) {
+        matrixC[i * size + j] = matrixC[i * size + j] + tmp * matrixB[k * size + j];
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 CC=mpicc
-CFLAGS= -Wall -W -Werror -g -lm -o
+CFLAGS= -Wall -W -Werror -g -lm -std=c99 -o
 FILE=matrixmult
 
 $(FILE): $(FILE).c
