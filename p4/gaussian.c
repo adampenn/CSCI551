@@ -15,22 +15,27 @@ double drand48();
 void fill_matrix(int size, double **matrix);
 void forward_elimination(int size, double **matrix);
 void print_matrix(int size, double **matrix);
-void back_substitution(int size, double **matrix, double* result);
-void print_results(int size, double* result, struct rusage usage);
+void back_substitution(int size, double **matrix, double *result);
+void print_results(int size, double *result, struct rusage usage, double norm);
+double calculate_euclidean(int size, double **matrix, double *result);
 
 /*
  * Does Gaussian Elimination on a matrix
  *
  * Gets input from the user if the size is less then 5x5 and does Gaussian
- * elimitation on the matrix. Prints the result to stdout.
+ * elimination on the matrix. Prints the result to stdout.
  *
  * @return int  returns 0 if no errors occured
  */
 int main() {
   // Declare variables for program
-  int    size;
+  int    size,
+         i,
+         j;
   double **matrix,
-         *result;
+         **orignalA,
+         *result,
+         norm;
   struct rusage usage;
   
   // Seed random number generator
@@ -41,9 +46,17 @@ int main() {
   
   // Create the matrixs we need based off of the size given
   matrix = (double**)calloc(size, sizeof(double*));
+  orignalA = (double**)calloc(size, sizeof(double*));
   result = (double*)calloc(size, sizeof(double));
   
   fill_matrix(size, matrix);
+
+  // Make a copy of the matrix A
+  for (i = 0; i < size; i++) {
+    orignalA[i] = (double*)calloc(size+1, sizeof(double));
+    for (j = 0; j < size+1; j++)
+      orignalA[i][j] = matrix[i][j];
+  }
 
   #if debug
     printf("Printing orignal matrix\n");
@@ -58,7 +71,9 @@ int main() {
 
   getrusage(RUSAGE_SELF, &usage); 
 
-  print_results(size, result, usage);
+  norm = calculate_euclidean(size, orignalA, result);
+
+  print_results(size, result, usage, norm);
 
   // Delete the memory when we are done with it
   //for (i = 0; i < size; i++)
@@ -160,21 +175,20 @@ void fill_matrix(int size, double **matrix) {
   else
     for (i = 0; i < size; i++)
       for (j = 0; j < size+1; j++)
-        matrix[i][j] = drand48();
+        matrix[i][j] = drand48() * -2e6+ 1e6;
 }
 
 /*
  * Does the back substitution
  *
  * From the given matrix it preforms back subsititution, assumes that eh matrix
- * has already had forward elimitation done to it.
+ * has already had forward elimination done to it.
  *
  * @param  size    The size of the matrix ( size+1 incudes the b part )
  * @param  matrix  The matrix that needs to be solved
  * @param  result  The array to store the answer in
  * @return void    Nothing is returned
  */
-
 void back_substitution(int size, double **matrix, double* result) {
   int i, j;
   
@@ -188,13 +202,72 @@ void back_substitution(int size, double **matrix, double* result) {
   }
 }
 
-void print_results(int size, double* result, struct rusage usage) {
+/*
+ * Prints the results from the program running
+ *
+ * Takes the results and some usage stats and prints them for the user to see
+ *
+ * @param  size    The size of the reault matrix
+ * @param  matrix  The matrix that holds the result from the gaussian 
+ *                 elimination
+ * @param  ussage  The struct that hold the usage stats
+ * @return void    Nothing is returned
+ */
+void print_results(int size, double *result, struct rusage usage, double norm) {
   int i;
-  double time = usage.ru_utime.tv_sec + usage.ru_utime.tv_usec/1000000;
-  printf("User CPU Time: %lf\n", time);
+  double userTime, systemTime;
+  userTime = (double)usage.ru_utime.tv_sec + (double)usage.ru_utime.tv_usec / 1.0e6;
+  systemTime = (double)usage.ru_stime.tv_sec + (double)usage.ru_stime.tv_usec / 1.0e6;
+  printf("User CPU Time: %.6lf\n", userTime);
+  printf("System CPU Time: %.6lf\n", systemTime);
+  printf("Max Resident Set: %ld\n", usage.ru_maxrss);
+  printf("Minor Page Faults: %ld\n", usage.ru_minflt);
+  printf("Major Page Faults: %ld\n", usage.ru_majflt);
+  printf("i^2-norm: %lf\n", norm);
   
-  for (i = 0; i < size; i++)
-    printf("%lf ", result[i]);
-  printf("\n");
+  if (size <= 4) {
+    for (i = 0; i < size; i++)
+      printf("%.10le", result[i]);
+    printf("\n");
+  }
 }
+
+/*
+ * Calculates the euclidean norm
+ *
+ * Based off of the orginal matrix and the result matrix calculate the 
+ * euclidean norm to see how much error was in your solution
+ *
+ * @param  size    The size of the reault matrix and the orginal matrix
+ *                 ( size+1 incudes the b part )
+ * @param  matrix  The matrix that holds the orginal A and b
+ * @param  result  The matrix that holds the result from back subsititution
+ * @return double  Returns the calculated euclidean norm
+ */
+double calculate_euclidean(int size, double **matrix, double *result) {
+  int i, j, k;
+  double norm = 0, *residule = calloc(size, sizeof(double));
+
+  for (i = 0; i < size; i++) {
+    for (j = 0; j < size; j++) {
+      residule[i] = 0;
+      for (k = 0; k < size; k++)
+        residule[i] += matrix[i][k] * result[k];
+    }
+  }
+  #if debug
+    for (i = 0; i < size; i++)
+      printf("%lf ", residule[i]);
+    printf("\n");
+  #endif
+  for (i = 0; i < size; i++)
+      norm += pow((residule[i]- matrix[i][size]),2);
+  #if debug
+    printf("norm: %lf\n", norm);
+  #endif
+  return sqrt(norm);
+}
+
+
+
 

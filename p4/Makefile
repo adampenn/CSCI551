@@ -1,5 +1,5 @@
-CC=gcc
-CFLAGS= -Wall -W -g -lm -std=c99 -o
+CC=icc
+CFLAGS= -Wall -W -Werror -g -lm -std=c99 -O1 -o
 FILE=gaussian
 
 $(FILE): $(FILE).c

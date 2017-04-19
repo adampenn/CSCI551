@@ -19,7 +19,7 @@ int main() {
   long double a, b, t, increment, previous_t;
   long double absolute_error = .5 * pow(10, -14); // 0.5e-14
   long double current_error, current_value,
-              true_value = 4003.72090015132682659291;
+              true_value = 4003.72090015132682659291L;
   int first_run = 1;
   
   // Read in the values from the user
