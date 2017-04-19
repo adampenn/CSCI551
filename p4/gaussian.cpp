@@ -37,18 +37,18 @@ int main() {
          *result,
          norm;
   struct rusage usage;
-  
+
   // Seed random number generator
   srand48(time(NULL));
 
   // Read in size
   scanf("%d", &size);
-  
+
   // Create the matrixs we need based off of the size given
   matrix = (double**)calloc(size, sizeof(double*));
   orignalA = (double**)calloc(size, sizeof(double*));
   result = (double*)calloc(size, sizeof(double));
-  
+
   fill_matrix(size, matrix);
 
   // Make a copy of the matrix A
@@ -65,20 +65,15 @@ int main() {
     if (size <= 4)
       print_matrix(size, matrix);
   #endif
-  
+
   forward_elimination(size, matrix);
   back_substitution(size, matrix, result);
 
-  getrusage(RUSAGE_SELF, &usage); 
+  getrusage(RUSAGE_SELF, &usage);
 
   norm = calculate_euclidean(size, orignalA, result);
 
   print_results(size, result, usage, norm);
-
-  // Delete the memory when we are done with it
-  //for (i = 0; i < size; i++)
-  //  free(matrix[i]);
-  //free(matrix);
 
   return 0;
 }
@@ -122,7 +117,7 @@ void forward_elimination(int size, double **matrix) {
     #endif
     swap = 0;
     for (j = i+1; j < size; j++) {
-      if(fabs(matrix[j][i] > diagnalValue)) {
+      if (fabs(matrix[j][i] > diagnalValue)) {
         swap = 1;
         rowToSwap = j;
         #if debug
@@ -171,7 +166,7 @@ void fill_matrix(int size, double **matrix) {
   if (size <= 4)
     for (i = 0; i < size; i++)
       for (j = 0; j < size+1; j++)
-      scanf("%lf", &matrix[i][j]); 
+      scanf("%lf", &matrix[i][j]);
   else
     for (i = 0; i < size; i++)
       for (j = 0; j < size+1; j++)
@@ -191,7 +186,7 @@ void fill_matrix(int size, double **matrix) {
  */
 void back_substitution(int size, double **matrix, double* result) {
   int i, j;
-  
+
   // Deal with the case where there is only one variable
   result[size-1] = matrix[size-1][size] / matrix[size-1][size-1];
 
@@ -216,15 +211,17 @@ void back_substitution(int size, double **matrix, double* result) {
 void print_results(int size, double *result, struct rusage usage, double norm) {
   int i;
   double userTime, systemTime;
-  userTime = (double)usage.ru_utime.tv_sec + (double)usage.ru_utime.tv_usec / 1.0e6;
-  systemTime = (double)usage.ru_stime.tv_sec + (double)usage.ru_stime.tv_usec / 1.0e6;
+  userTime = (double)usage.ru_utime.tv_sec +
+             (double)usage.ru_utime.tv_usec / 1.0e6;
+  systemTime = (double)usage.ru_stime.tv_sec +
+               (double)usage.ru_stime.tv_usec / 1.0e6;
   printf("User CPU Time: %.6lf\n", userTime);
   printf("System CPU Time: %.6lf\n", systemTime);
   printf("Max Resident Set: %ld\n", usage.ru_maxrss);
   printf("Minor Page Faults: %ld\n", usage.ru_minflt);
   printf("Major Page Faults: %ld\n", usage.ru_majflt);
   printf("i^2-norm: %lf\n", norm);
-  
+
   if (size <= 4) {
     for (i = 0; i < size; i++)
       printf("%.10le", result[i]);
@@ -261,13 +258,10 @@ double calculate_euclidean(int size, double **matrix, double *result) {
     printf("\n");
   #endif
   for (i = 0; i < size; i++)
-      norm += pow((residule[i]- matrix[i][size]),2);
+      norm += pow((residule[i]- matrix[i][size]), 2);
   #if debug
     printf("norm: %lf\n", norm);
   #endif
   return sqrt(norm);
 }
-
-
-
 
