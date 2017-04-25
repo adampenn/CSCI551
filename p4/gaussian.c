@@ -42,7 +42,10 @@ int main() {
   srand48(time(NULL));
 
   // Read in size
-  scanf("%d", &size);
+  if (!scanf("%d", &size)) {
+    printf("READING SIZE FAILED\n");
+    return 1;
+  }
 
   // Create the matrixs we need based off of the size given
   matrix = (double**)calloc(size, sizeof(double*));
@@ -92,7 +95,7 @@ void print_matrix(int size, double **matrix) {
   int i, j;
   for (i = 0; i < size; i++) {
     for (j = 0; j < size+1; j++)
-      printf("%lf ", matrix[i][j]);
+      printf("%.10le ", matrix[i][j]);
     printf("\n");
   }
 }
@@ -166,7 +169,10 @@ void fill_matrix(int size, double **matrix) {
   if (size <= 4)
     for (i = 0; i < size; i++)
       for (j = 0; j < size+1; j++)
-      scanf("%lf", &matrix[i][j]);
+      if (!scanf("%lf", &matrix[i][j])) {
+        printf("READING INDEX VALUE FAILED\n");
+      }
+
   else
     for (i = 0; i < size; i++)
       for (j = 0; j < size+1; j++)
@@ -220,11 +226,11 @@ void print_results(int size, double *result, struct rusage usage, double norm) {
   printf("Max Resident Set: %ld\n", usage.ru_maxrss);
   printf("Minor Page Faults: %ld\n", usage.ru_minflt);
   printf("Major Page Faults: %ld\n", usage.ru_majflt);
-  printf("i^2-norm: %lf\n", norm);
+  printf("l^2-norm: %.10e\n", norm);
 
   if (size <= 4) {
     for (i = 0; i < size; i++)
-      printf("%.10le", result[i]);
+      printf("%.10le ", result[i]);
     printf("\n");
   }
 }

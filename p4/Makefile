@@ -1,4 +1,4 @@
-CC=icc
+CC=gcc
 CFLAGS= -Wall -W -Werror -g -lm -std=c99 -O1 -o
 FILE=gaussian
 
