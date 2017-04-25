@@ -5,7 +5,7 @@ FILE=gaussian
 $(FILE): $(FILE).c
 	$(CC) $(FILE).c $(CFLAGS) $(FILE)
 
-style: ~/bin/helpful_files/cpplint.py $(FILE) 
+style: ../cpplint.py $(FILE) 
 	python $< --filter=-runtime/references,-legal/copyright,-readability/streams,-runtime/explicit,-build/header_guard,-build/include $(FILE).cpp
 
 
