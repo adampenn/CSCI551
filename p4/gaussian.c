@@ -27,7 +27,7 @@ double calculate_euclidean(int size, double **matrix, double *result);
  *
  * @return int  returns 0 if no errors occured
  */
-int main() {
+int main(int argc, char **argv) {
   // Declare variables for program
   int    size,
          i,
@@ -42,10 +42,11 @@ int main() {
   srand48(time(NULL));
 
   // Read in size
-  if (!scanf("%d", &size)) {
-    printf("READING SIZE FAILED\n");
+  if (argc != 2) {
+    printf("NO SIZE GIVEN AS ARGUMENT\n");
     return 1;
   }
+  size = atoi(argv[1]);
 
   // Create the matrixs we need based off of the size given
   matrix = (double**)calloc(size, sizeof(double*));
@@ -120,9 +121,14 @@ void forward_elimination(int size, double **matrix) {
     #endif
     swap = 0;
     for (j = i+1; j < size; j++) {
-      if (fabs(matrix[j][i] > diagnalValue)) {
+      #if debug
+        printf("Curent value: %lf Diagnal value: %lf\n", fabs(matrix[j][i]),
+               diagnalValue);
+      #endif
+      if (fabs(matrix[j][i]) > diagnalValue) {
         swap = 1;
         rowToSwap = j;
+        diagnalValue = fabs(matrix[j][i]);
         #if debug
           printf("Should swap row %d with row %d\n", i, rowToSwap);
         #endif
@@ -169,9 +175,9 @@ void fill_matrix(int size, double **matrix) {
   if (size <= 4) {
     for (i = 0; i < size; i++)
       for (j = 0; j < size+1; j++)
-      if (!scanf("%lf", &matrix[i][j])) {
-        printf("READING INDEX VALUE FAILED\n");
-      }
+        if (!scanf("%lf", &matrix[i][j])) {
+          printf("READING INDEX VALUE FAILED\n");
+        }
   } else {
     for (i = 0; i < size; i++)
       for (j = 0; j < size+1; j++)
