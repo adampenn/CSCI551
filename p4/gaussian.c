@@ -166,17 +166,17 @@ void fill_matrix(int size, double **matrix) {
   int i, j;
   for (i = 0; i < size+1; i++)
     matrix[i] = calloc(size, sizeof(double));
-  if (size <= 4)
+  if (size <= 4) {
     for (i = 0; i < size; i++)
       for (j = 0; j < size+1; j++)
       if (!scanf("%lf", &matrix[i][j])) {
         printf("READING INDEX VALUE FAILED\n");
       }
-
-  else
+  } else {
     for (i = 0; i < size; i++)
       for (j = 0; j < size+1; j++)
         matrix[i][j] = drand48() * -2e6+ 1e6;
+  }
 }
 
 /*
@@ -226,7 +226,7 @@ void print_results(int size, double *result, struct rusage usage, double norm) {
   printf("Max Resident Set: %ld\n", usage.ru_maxrss);
   printf("Minor Page Faults: %ld\n", usage.ru_minflt);
   printf("Major Page Faults: %ld\n", usage.ru_majflt);
-  printf("l^2-norm: %.10e\n", norm);
+  printf("l^2-norm: %.10le\n", norm);
 
   if (size <= 4) {
     for (i = 0; i < size; i++)
