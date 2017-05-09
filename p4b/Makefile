@@ -1,5 +1,5 @@
 CC=icc
-CFLAGS= -Wall -W -Werror -g -lm -std=c99 -O3 -o
+CFLAGS= -Wall -W -Werror -g -lm -std=c99 -O3 -qopenmp -qopt-report=2 -qopt-report-phase=vec -o
 FILE=gaussian
 
 $(FILE): $(FILE).c

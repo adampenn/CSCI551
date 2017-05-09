@@ -1,0 +1,313 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+
+Begin optimization report for: main(int, char **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at gaussian.c(212,3) inlined into gaussian.c(92,3)
+   remark #15527: loop was not vectorized: function call to _mm_malloc(unsigned long long, unsigned long long) cannot be vectorized   [ gaussian.c(213,17) ]
+LOOP END
+
+LOOP BEGIN at gaussian.c(217,5) inlined into gaussian.c(92,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed OUTPUT dependence between call:scanf(const char *__restrict__, ...) (219:14) and call:printf(const char *__restrict__, ...) (220:11)
+
+   LOOP BEGIN at gaussian.c(218,7) inlined into gaussian.c(92,3)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+      remark #15346: vector dependence: assumed OUTPUT dependence between call:scanf(const char *__restrict__, ...) (219:14) and call:printf(const char *__restrict__, ...) (220:11)
+   LOOP END
+LOOP END
+
+LOOP BEGIN at gaussian.c(225,5) inlined into gaussian.c(92,3)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at gaussian.c(227,7) inlined into gaussian.c(92,3)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(227,7) inlined into gaussian.c(92,3)
+      remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(227,7) inlined into gaussian.c(92,3)
+   <Alternate Alignment Vectorized Loop>
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(227,7) inlined into gaussian.c(92,3)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at gaussian.c(128,3) inlined into gaussian.c(99,7)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed OUTPUT dependence between call:printf(const char *__restrict__, ...) (130:7) and call:printf(const char *__restrict__, ...) (131:5)
+
+   LOOP BEGIN at gaussian.c(129,5) inlined into gaussian.c(99,7)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   LOOP END
+LOOP END
+
+LOOP BEGIN at gaussian.c(149,3) inlined into gaussian.c(102,3)
+   remark #15521: loop was not vectorized: loop control variable was not identified. Explicitly compute the iteration count before executing the loop or try using canonical loop form from OpenMP specification
+LOOP END
+
+LOOP BEGIN at gaussian.c(301,5) inlined into gaussian.c(109,10)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at gaussian.c(300,3) inlined into gaussian.c(109,10)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at gaussian.c(303,7) inlined into gaussian.c(109,10)
+         remark #15300: LOOP WAS VECTORIZED
+      LOOP END
+
+      LOOP BEGIN at gaussian.c(303,7) inlined into gaussian.c(109,10)
+      <Remainder loop for vectorization>
+         remark #15301: REMAINDER LOOP WAS VECTORIZED
+      LOOP END
+
+      LOOP BEGIN at gaussian.c(303,7) inlined into gaussian.c(109,10)
+      <Remainder loop for vectorization>
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at gaussian.c(312,3) inlined into gaussian.c(109,10)
+   remark #15300: LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at gaussian.c(312,3) inlined into gaussian.c(109,10)
+<Remainder loop for vectorization>
+   remark #15335: remainder loop was not vectorized: vectorization possible but seems inefficient. Use vector always directive or -vec-threshold0 to override 
+LOOP END
+
+LOOP BEGIN at gaussian.c(278,5) inlined into gaussian.c(111,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+LOOP END
+
+LOOP BEGIN at gaussian.c(157,5) inlined into gaussian.c(102,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed ANTI dependence between at (163:7) and at (166:9)
+LOOP END
+
+LOOP BEGIN at gaussian.c(157,5) inlined into gaussian.c(102,3)
+<Remainder>
+LOOP END
+
+LOOP BEGIN at gaussian.c(189,12) inlined into gaussian.c(102,3)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at gaussian.c(189,7) inlined into gaussian.c(102,3)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(189,7) inlined into gaussian.c(102,3)
+      remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(189,7) inlined into gaussian.c(102,3)
+   <Alternate Alignment Vectorized Loop>
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(189,7) inlined into gaussian.c(102,3)
+   <Remainder loop for vectorization>
+      remark #15301: REMAINDER LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(189,7) inlined into gaussian.c(102,3)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at gaussian.c(252,20) inlined into gaussian.c(103,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed OUTPUT dependence between *j (251:10) and *j (251:29)
+
+   LOOP BEGIN at gaussian.c(251,5) inlined into gaussian.c(103,3)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+      remark #15346: vector dependence: assumed FLOW dependence between result (252:7) and result (252:7)
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(251,5) inlined into gaussian.c(103,3)
+   <Remainder>
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: print_matrix(int, double **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at gaussian.c(128,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed OUTPUT dependence between call:printf(const char *__restrict__, ...) (130:7) and call:printf(const char *__restrict__, ...) (131:5)
+
+   LOOP BEGIN at gaussian.c(129,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: forward_elimination(int, double **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at gaussian.c(149,3)
+   remark #15521: loop was not vectorized: loop control variable was not identified. Explicitly compute the iteration count before executing the loop or try using canonical loop form from OpenMP specification
+LOOP END
+
+LOOP BEGIN at gaussian.c(157,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed ANTI dependence between at (163:7) and at (166:9)
+LOOP END
+
+LOOP BEGIN at gaussian.c(157,5)
+<Remainder>
+LOOP END
+
+LOOP BEGIN at gaussian.c(189,12)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at gaussian.c(189,7)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(189,7)
+      remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(189,7)
+   <Alternate Alignment Vectorized Loop>
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(189,7)
+   <Remainder loop for vectorization>
+      remark #15301: REMAINDER LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(189,7)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: fill_matrix(int, double **, double **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at gaussian.c(212,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed OUTPUT dependence between call:_mm_malloc(unsigned long long, unsigned long long) (213:17) and orignalA[i] (214:5)
+LOOP END
+
+LOOP BEGIN at gaussian.c(217,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed FLOW dependence between call:scanf(const char *__restrict__, ...) (219:14) and orignalA[i] (222:9)
+
+   LOOP BEGIN at gaussian.c(218,7)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+      remark #15346: vector dependence: assumed FLOW dependence between call:scanf(const char *__restrict__, ...) (219:14) and orignalA[i] (222:9)
+   LOOP END
+LOOP END
+
+LOOP BEGIN at gaussian.c(225,5)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at gaussian.c(227,7)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(227,7)
+      remark #15301: OpenMP SIMD LOOP WAS VECTORIZED
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(227,7)
+   <Alternate Alignment Vectorized Loop>
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(227,7)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: back_substitution(int, double **, double *)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at gaussian.c(250,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+   remark #15346: vector dependence: assumed OUTPUT dependence between *j (251:10) and *j (251:29)
+
+   LOOP BEGIN at gaussian.c(251,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+      remark #15346: vector dependence: assumed FLOW dependence between result[i] (252:7) and result[i] (252:7)
+   LOOP END
+
+   LOOP BEGIN at gaussian.c(251,5)
+   <Remainder>
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: print_results(int, double *, struct rusage, double, double)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at gaussian.c(278,5)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization. First dependence is shown below. Use level 5 report for details
+LOOP END
+===========================================================================
+
+Begin optimization report for: calculate_euclidean(int, double **, double *)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at gaussian.c(301,5)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at gaussian.c(300,3)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at gaussian.c(303,7)
+      <Peeled loop for vectorization>
+      LOOP END
+
+      LOOP BEGIN at gaussian.c(303,7)
+         remark #15300: LOOP WAS VECTORIZED
+      LOOP END
+
+      LOOP BEGIN at gaussian.c(303,7)
+      <Alternate Alignment Vectorized Loop>
+      LOOP END
+
+      LOOP BEGIN at gaussian.c(303,7)
+      <Remainder loop for vectorization>
+         remark #15301: REMAINDER LOOP WAS VECTORIZED
+      LOOP END
+
+      LOOP BEGIN at gaussian.c(303,7)
+      <Remainder loop for vectorization>
+      LOOP END
+   LOOP END
+LOOP END
+
+LOOP BEGIN at gaussian.c(312,3)
+   remark #15300: LOOP WAS VECTORIZED
+LOOP END
+
+LOOP BEGIN at gaussian.c(312,3)
+<Remainder loop for vectorization>
+   remark #15335: remainder loop was not vectorized: vectorization possible but seems inefficient. Use vector always directive or -vec-threshold0 to override 
+LOOP END
+===========================================================================
