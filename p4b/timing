@@ -1,0 +1,247 @@
+Wed May 10 19:54:11 MDT 2017
+Num of threads: 1
+Run Time: 1468.109650
+Max Resident Set: 1004028
+Minor Page Faults: 1598966
+Major Page Faults: 1
+l^2-norm: 2.3337768144e-03
+
+Wed May 10 20:09:07 MDT 2017
+Num of threads: 5
+Run Time: 305.116336
+Max Resident Set: 1004716
+Minor Page Faults: 1478993
+Major Page Faults: 0
+l^2-norm: 6.4858512523e-04
+
+Wed May 10 20:08:09 MDT 2017
+Num of threads: 10
+Run Time: 156.496732
+Max Resident Set: 1005548
+Minor Page Faults: 1251671
+Major Page Faults: 0
+l^2-norm: 2.3987551509e-02
+
+Wed May 10 20:07:00 MDT 2017
+Num of threads: 20
+Run Time: 85.164569
+Max Resident Set: 1009160
+Minor Page Faults: 1115473
+Major Page Faults: 0
+l^2-norm: 1.8591134565e-03
+
+Wed May 10 19:55:35 MDT 2017
+Num of threads: 40
+Run Time: 56.445381
+Max Resident Set: 1014436
+Minor Page Faults: 1041110
+Major Page Faults: 1
+l^2-norm: 7.3787473429e-04
+
+Wed May 10 19:56:51 MDT 2017
+Num of threads: 50
+Run Time: 56.004379
+Max Resident Set: 1018068
+Minor Page Faults: 1032672
+Major Page Faults: 1
+l^2-norm: 3.1806939355e-03
+
+Wed May 10 19:55:50 MDT 2017
+Num of threads: 60
+Run Time: 55.954988
+Max Resident Set: 1021756
+Minor Page Faults: 1049383
+Major Page Faults: 1
+l^2-norm: 2.7795993396e-03
+
+Wed May 10 19:55:49 MDT 2017
+Num of threads: 70
+Run Time: 63.173454
+Max Resident Set: 1023356
+Minor Page Faults: 1083318
+Major Page Faults: 1
+l^2-norm: 1.3754822946e-03
+
+Wed May 10 20:45:30 MDT 2017
+Num of threads: 1
+Run Time: 1412.970579
+Max Resident Set: 1004020
+Minor Page Faults: 1610423
+Major Page Faults: 0
+l^2-norm: 5.3877281982e-03
+
+Wed May 10 20:44:02 MDT 2017
+Num of threads: 5
+Run Time: 311.719597
+Max Resident Set: 1004716
+Minor Page Faults: 1410534
+Major Page Faults: 0
+l^2-norm: 2.0493193254e-03
+
+Wed May 10 20:41:21 MDT 2017
+Num of threads: 10
+Run Time: 160.137776
+Max Resident Set: 1007588
+Minor Page Faults: 1277155
+Major Page Faults: 0
+l^2-norm: 3.5452634129e-03
+
+Wed May 10 20:32:37 MDT 2017
+Num of threads: 30
+Run Time: 61.486822
+Max Resident Set: 1012792
+Minor Page Faults: 1043774
+Major Page Faults: 0
+l^2-norm: 1.6332161037e-03
+
+Wed May 10 20:33:53 MDT 2017
+Num of threads: 40
+Run Time: 56.384209
+Max Resident Set: 1016480
+Minor Page Faults: 1042892
+Major Page Faults: 0
+l^2-norm: 2.7405272125e-02
+
+Wed May 10 20:32:52 MDT 2017
+Num of threads: 50
+Run Time: 55.813120
+Max Resident Set: 1018072
+Minor Page Faults: 1034721
+Major Page Faults: 0
+l^2-norm: 8.5908687291e-03
+
+Wed May 10 20:32:51 MDT 2017
+Num of threads: 60
+Run Time: 55.965229
+Max Resident Set: 1019720
+Minor Page Faults: 1036369
+Major Page Faults: 0
+l^2-norm: 2.1776361474e-03
+
+Wed May 10 20:31:13 MDT 2017
+Num of threads: 70
+Run Time: 62.529766
+Max Resident Set: 1023356
+Minor Page Faults: 1052102
+Major Page Faults: 0
+l^2-norm: 4.5178296999e-03
+
+Thu May 11 21:42:17 MDT 2017
+Num of threads: 10
+Run Time: 160.579534
+Max Resident Set: 1007584
+Minor Page Faults: 1244575
+Major Page Faults: 0
+l^2-norm: 1.4990857628e-03
+
+Thu May 11 21:30:54 MDT 2017
+Num of threads: 30
+Run Time: 61.441843
+Max Resident Set: 1012796
+Minor Page Faults: 1037778
+Major Page Faults: 0
+l^2-norm: 2.0758657714e-03
+
+Thu May 11 21:32:09 MDT 2017
+Num of threads: 40
+Run Time: 56.290434
+Max Resident Set: 1016480
+Minor Page Faults: 1017655
+Major Page Faults: 0
+l^2-norm: 7.8384182487e-03
+
+Thu May 11 21:31:08 MDT 2017
+Num of threads: 50
+Run Time: 55.893688
+Max Resident Set: 1018072
+Minor Page Faults: 1026633
+Major Page Faults: 0
+l^2-norm: 9.8651913431e-04
+
+Thu May 11 21:31:07 MDT 2017
+Num of threads: 60
+Run Time: 56.022166
+Max Resident Set: 1021756
+Minor Page Faults: 1035114
+Major Page Faults: 0
+l^2-norm: 6.1271314566e-04
+
+Thu May 11 21:29:29 MDT 2017
+Num of threads: 70
+Run Time: 62.733708
+Max Resident Set: 1025396
+Minor Page Faults: 1071051
+Major Page Faults: 0
+l^2-norm: 1.9145654116e-02
+
+Thu May 11 21:39:37 MDT 2017
+Num of threads: 5
+Run Time: 311.532561
+Max Resident Set: 1004716
+Minor Page Faults: 1432855
+Major Page Faults: 0
+l^2-norm: 9.1272526362e-04
+
+Thu May 11 21:41:32 MDT 2017
+Num of threads: 1
+Run Time: 1409.932322
+Max Resident Set: 1004012
+Minor Page Faults: 1610423
+Major Page Faults: 0
+l^2-norm: 2.8411081300e-02
+
+Thu May 11 22:04:14 MDT 2017
+Num of threads: 20
+Run Time: 85.319677
+Max Resident Set: 1009160
+Minor Page Faults: 1130836
+Major Page Faults: 0
+l^2-norm: 3.1809935086e-03
+
+Thu May 11 22:02:36 MDT 2017
+Num of threads: 30
+Run Time: 61.590162
+Max Resident Set: 1010760
+Minor Page Faults: 1046958
+Major Page Faults: 0
+l^2-norm: 3.2187791222e-03
+
+Thu May 11 22:04:01 MDT 2017
+Num of threads: 2
+Run Time: 713.084010
+Max Resident Set: 1005732
+Minor Page Faults: 1581076
+Major Page Faults: 0
+l^2-norm: 2.5256996240e-03
+
+Thu May 11 22:05:17 MDT 2017
+Num of threads: 2
+Run Time: 747.609221
+Max Resident Set: 1006048
+Minor Page Faults: 1631271
+Major Page Faults: 0
+l^2-norm: 9.4333260799e-04
+
+Thu May 11 22:57:02 MDT 2017
+Num of threads: 2
+Run Time: 711.110408
+Max Resident Set: 1005448
+Minor Page Faults: 1576677
+Major Page Faults: 0
+l^2-norm: 1.6112253834e-01
+
+Thu May 11 22:46:40 MDT 2017
+Num of threads: 20
+Run Time: 83.973439
+Max Resident Set: 1009156
+Minor Page Faults: 1129326
+Major Page Faults: 0
+l^2-norm: 1.4799722642e-03
+
+Thu May 11 22:46:54 MDT 2017
+Num of threads: 20
+Run Time: 83.846884
+Max Resident Set: 1009160
+Minor Page Faults: 1135975
+Major Page Faults: 0
+l^2-norm: 3.5379404878e-03

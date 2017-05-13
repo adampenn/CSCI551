@@ -79,11 +79,9 @@ int main(int argc, char **argv) {
   // Set the number of threads
   #pragma omp parallel
     threadCount = omp_get_num_threads();
- 
-  //#if debug
-      printf("Num of threads: %d\n", threadCount);
-  //#endif
- 
+
+  printf("Num of threads: %d\n", threadCount);
+
   // Create the matrixs we need based off of the size given
   matrix = (double**)_mm_malloc(size * sizeof(double*), 64);
   orignalA = (double**)_mm_malloc(size * sizeof(double*), 64);
@@ -104,11 +102,11 @@ int main(int argc, char **argv) {
   back_substitution(size, matrix, result);
 
   getrusage(RUSAGE_SELF, &usage);
-  
+
   end = omp_get_wtime();
 
   norm = calculate_euclidean(size, orignalA, result);
-  
+
   print_results(size, result, usage, norm, end - start);
 
   return 0;
@@ -154,7 +152,7 @@ void forward_elimination(int size, double ** restrict matrix) {
       printf("Diagnal Value: %lf\n", diagnalValue);
     #endif
     swap = 0;
-    
+
     for (j = i+1; j < size; j++) {
       #if debug
         printf("Curent value: %lf Diagnal value: %lf\n", fabs(matrix[j][i]),
@@ -206,7 +204,8 @@ void forward_elimination(int size, double ** restrict matrix) {
  * @param  orignalA  The matrix to copy the orignal matrix into
  * @return void      Nothing is returned
  */
-void fill_matrix(int size, double **__restrict__ matrix, double **__restrict__ orignalA) {
+void fill_matrix(int size, double **__restrict__ matrix,
+                 double **__restrict__ orignalA) {
   int i, j;
   for (i = 0; i < size+1; i++) {
     matrix[i] = _mm_malloc(size * sizeof(double), 64);
