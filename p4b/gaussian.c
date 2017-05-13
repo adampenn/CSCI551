@@ -80,9 +80,9 @@ int main(int argc, char **argv) {
   #pragma omp parallel
     threadCount = omp_get_num_threads();
  
-  #if debug
+  //#if debug
       printf("Num of threads: %d\n", threadCount);
-  #endif
+  //#endif
  
   // Create the matrixs we need based off of the size given
   matrix = (double**)_mm_malloc(size * sizeof(double*), 64);
@@ -100,6 +100,7 @@ int main(int argc, char **argv) {
   #endif
 
   forward_elimination(size, matrix);
+
   back_substitution(size, matrix, result);
 
   getrusage(RUSAGE_SELF, &usage);
@@ -145,16 +146,15 @@ void print_matrix(int size, double **matrix) {
 void forward_elimination(int size, double ** restrict matrix) {
   int i, j, k, swap, rowToSwap;
   double *temp, multiplier, diagnalValue;
-  __assume_aligned(matrix, 64);
+
+  #pragma vector aligned
   for (i = 0; i < size-1; i++) {
-    #pragma omp parallel num_threads(threadCount) firstprivate(i)
     diagnalValue = fabs(matrix[i][i]);
     #if debug
       printf("Diagnal Value: %lf\n", diagnalValue);
     #endif
     swap = 0;
     
-    #pragma omp parallel for
     for (j = i+1; j < size; j++) {
       #if debug
         printf("Curent value: %lf Diagnal value: %lf\n", fabs(matrix[j][i]),
@@ -185,7 +185,6 @@ void forward_elimination(int size, double ** restrict matrix) {
       #if debug
         printf("multiplier: %lf\n", multiplier);
       #endif
-      #pragma omp simd
       for (k = 0; k < size+1; k++)
         matrix[j][k] -= (multiplier * matrix[i][k]);
     }
@@ -223,7 +222,6 @@ void fill_matrix(int size, double **__restrict__ matrix, double **__restrict__ o
       }
   } else {
     for (i = 0; i < size; i++)
-      #pragma omp simd
       for (j = 0; j < size+1; j++)
         orignalA[i][j] = matrix[i][j] = drand48() * -2e6+ 1e6;
   }
@@ -245,8 +243,6 @@ void back_substitution(int size, double **matrix, double* result) {
 
   // Deal with the case where there is only one variable
   result[size-1] = matrix[size-1][size] / matrix[size-1][size-1];
-  
-  #pragma omp parallel for
   for (i = size-2; i >= 0; i--) {
     for (j = i+1; j < size; j++)
       result[i] += matrix[i][j] * result[j];
@@ -297,6 +293,7 @@ double calculate_euclidean(int size, double **matrix, double *result) {
   int i, j, k;
   double norm = 0, *residule = (double*)_mm_malloc(size * sizeof(double), 64);
 
+  #pragma vector aligned
   for (i = 0; i < size; i++) {
     for (j = 0; j < size; j++) {
       residule[i] = 0;
@@ -309,8 +306,9 @@ double calculate_euclidean(int size, double **matrix, double *result) {
       printf("%lf ", residule[i]);
     printf("\n");
   #endif
+
   for (i = 0; i < size; i++)
-      norm += pow((residule[i]- matrix[i][size]), 2);
+    norm += pow((residule[i]- matrix[i][size]), 2);
   #if debug
     printf("norm: %lf\n", norm);
   #endif
